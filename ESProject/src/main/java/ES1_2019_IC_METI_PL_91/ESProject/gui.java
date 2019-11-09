@@ -10,7 +10,7 @@ public class gui extends JFrame{
 	}
 
 	public static void main(String [] args) {
-		System.out.println("-.-");
+		System.out.println("REPO");
 	}
 
 }
