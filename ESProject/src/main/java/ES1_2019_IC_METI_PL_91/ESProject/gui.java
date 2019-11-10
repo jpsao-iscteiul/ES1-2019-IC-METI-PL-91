@@ -5,6 +5,11 @@ import javax.swing.JLabel;
 
 public class gui extends JFrame{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public gui() {
 	JFrame frame = new JFrame("GUI"); 
 	frame.setSize(200, 200);
