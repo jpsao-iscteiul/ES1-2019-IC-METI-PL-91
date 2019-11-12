@@ -2,6 +2,8 @@ package ES1_2019_IC_METI_PL_91.ESProject;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,7 +19,11 @@ public class gui extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	private JComboBox metric_list;
+	private JComboBox simbol_list;
+	private JTextField value;
+	private JTextField box;
+	
 	public gui() {
 	JFrame frame = new JFrame("GUI"); 
 	frame.setSize(600, 600);
@@ -30,7 +36,7 @@ public class gui extends JFrame{
 	
 	//panel north
 	JLabel rule = new JLabel("RULE");
-	JTextField box = new JTextField(30); 
+	 box = new JTextField(30); 
 	north_panel.add(rule);
 	north_panel.add(box);
 	
@@ -53,14 +59,14 @@ public class gui extends JFrame{
 	JLabel simbols = new JLabel("Simbols");
 	JLabel threshold = new JLabel("Threshold");
 	
-	JComboBox metric_list = new JComboBox();
+	metric_list = new JComboBox();
 	//add lmetrics to metrics_list
 	metric_list.addItem("LOC");
 	metric_list.addItem("CYCLO");
 	metric_list.addItem("ATFD");
 	metric_list.addItem("LAA");
 	
-	JComboBox simbol_list = new JComboBox();
+	 simbol_list = new JComboBox();
 	//add symbols
 	simbol_list.addItem("<");
 	simbol_list.addItem(">");
@@ -68,7 +74,7 @@ public class gui extends JFrame{
 	simbol_list.addItem(">=");
 	simbol_list.addItem("=");
 	
-	JTextField value = new JTextField();
+	 value = new JTextField();
 	JButton add = new JButton("Add");
 	
 	
@@ -80,7 +86,17 @@ public class gui extends JFrame{
 	west_panel.add(value);
 	west_panel.add(add);
 	
-	
+	add.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			String selected_metric=getMetric();
+			String selected_simbol=getSymbol();
+			double selected_threshold=getThreshold();
+			String str = (selected_metric + " " + selected_simbol+ " "+selected_threshold);
+			box.setText(str);
+			
+		}
+		
+	});
 	//panel center
 	
 	JTextArea output = new JTextArea(20,20);
@@ -93,6 +109,21 @@ public class gui extends JFrame{
 	frame.add("East", east_panel);
 	frame.setVisible(true);
 	
+	
+	
+	
+	}
+	public String getMetric() {
+		String aux = metric_list.getSelectedItem().toString();
+		return aux;
+	}
+	public String getSymbol() {
+		String aux = simbol_list.getSelectedItem().toString();
+		return aux;
+	}
+	public double getThreshold() {
+		double aux = Double.parseDouble(value.getText());
+		return aux;
 	}
 	
 	public static void main(String [] args) {
