@@ -2,13 +2,26 @@ package ES1_2019_IC_METI_PL_91.ESProject;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -23,6 +36,7 @@ public class gui extends JFrame{
 	private JComboBox simbol_list;
 	private JTextField value;
 	private JTextField box;
+	private JComboBox operators;
 	
 	public gui() {
 	JFrame frame = new JFrame("GUI"); 
@@ -53,12 +67,15 @@ public class gui extends JFrame{
 	east_panel.add(load);
 	east_panel.add(submit);
 	
+	
+	
+	
 	//panel west
 	west_panel.setLayout(new GridLayout(3,3));
 	JLabel metrics = new JLabel("Metrics");
 	JLabel simbols = new JLabel("Simbols");
 	JLabel threshold = new JLabel("Threshold");
-	
+	operators = new JComboBox();
 	metric_list = new JComboBox();
 	//add lmetrics to metrics_list
 	metric_list.addItem("LOC");
@@ -73,6 +90,18 @@ public class gui extends JFrame{
 	simbol_list.addItem("<=");
 	simbol_list.addItem(">=");
 	simbol_list.addItem("=");
+	simbol_list.addItem("and");
+	simbol_list.addItem("or");
+	simbol_list.addItem("(");
+	simbol_list.addItem(")");
+	
+	// add operators
+	operators.addItem(" ");
+	operators.addItem("and");
+	operators.addItem("or");
+	operators.addItem("(");
+	operators.addItem(")");
+	
 	
 	 value = new JTextField();
 	JButton add = new JButton("Add");
@@ -85,17 +114,37 @@ public class gui extends JFrame{
 	west_panel.add(simbol_list);
 	west_panel.add(value);
 	west_panel.add(add);
+	west_panel.add(operators);
 	
+	save.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			String path = fileChooser();
+			try {
+				writeRuleToFile(path);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			 JOptionPane.showMessageDialog(null, "Rule saved sucessfully");
+		}
+	});
 	add.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
+			String created_rule = box.getText();
 			String selected_metric=getMetric();
 			String selected_simbol=getSymbol();
 			double selected_threshold=getThreshold();
-			String str = (selected_metric + " " + selected_simbol+ " "+selected_threshold);
+			String str = (created_rule+" " +getOperator()+" "+selected_metric + " " + selected_simbol+ " "+selected_threshold);
 			box.setText(str);
 			
 		}
 		
+	});
+	
+	import_file.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			fileChooser();
+		}
 	});
 	//panel center
 	
@@ -125,6 +174,49 @@ public class gui extends JFrame{
 		double aux = Double.parseDouble(value.getText());
 		return aux;
 	}
+	public String getOperator() {
+		String op = operators.getSelectedItem().toString();
+		return op;
+	}
+	public String fileChooser() {
+		String path_file=""; 
+		try {
+			     JFileChooser chooser = new JFileChooser();
+			     int retorno = chooser.showOpenDialog(null);
+			     
+			     if (retorno == JFileChooser.APPROVE_OPTION) {
+			       FileReader reader = new FileReader(chooser.getSelectedFile());
+			        path_file=  chooser.getSelectedFile().getAbsolutePath().toString();
+			         JOptionPane.showMessageDialog(null, "File imported sucessfully");
+			         
+			     }
+			   } catch (FileNotFoundException e) {
+			     e.printStackTrace();
+			   }
+		  return path_file;
+	}
+	
+	public void writeRuleToFile(String path_file) 
+			  throws IOException {
+					String fileName = path_file;
+					Path path = Paths.get(fileName);
+					byte[] bytes = Files.readAllBytes(path);
+					List<String> allLines = Files.readAllLines(path, StandardCharsets.UTF_8);
+		
+		
+				String aux="";
+				
+			    BufferedWriter writer = new BufferedWriter(new FileWriter(path_file, false));
+			    for(int i=0 ; i<allLines.size();i++) {
+			    	 aux=aux+allLines.get(i).toString()+"\n";
+			    	 System.out.println(aux);
+			    }
+			   writer.write(aux+box.getText() + "\n");
+			   writer.close();
+		
+			}
+	
+	
 	
 	public static void main(String [] args) {
 		
