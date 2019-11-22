@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -36,7 +37,7 @@ public class gui extends JFrame{
 	private JComboBox simbol_list;
 	private JTextField value;
 	private JTextField box;
-	private JComboBox operators;
+	private JTextArea output;
 	
 	public gui() {
 	JFrame frame = new JFrame("GUI"); 
@@ -71,11 +72,13 @@ public class gui extends JFrame{
 	
 	
 	//panel west
+	
+	
 	west_panel.setLayout(new GridLayout(3,3));
 	JLabel metrics = new JLabel("Metrics");
 	JLabel simbols = new JLabel("Simbols");
 	JLabel threshold = new JLabel("Threshold");
-	operators = new JComboBox();
+	
 	metric_list = new JComboBox();
 	//add lmetrics to metrics_list
 	metric_list.addItem("LOC");
@@ -90,22 +93,13 @@ public class gui extends JFrame{
 	simbol_list.addItem("<=");
 	simbol_list.addItem(">=");
 	simbol_list.addItem("=");
-	simbol_list.addItem("and");
-	simbol_list.addItem("or");
-	simbol_list.addItem("(");
-	simbol_list.addItem(")");
 	
-	// add operators
-	operators.addItem(" ");
-	operators.addItem("and");
-	operators.addItem("or");
-	operators.addItem("(");
-	operators.addItem(")");
+	
 	
 	
 	 value = new JTextField();
 	JButton add = new JButton("Add");
-	
+	JButton clear = new JButton("Clear");
 	
 	west_panel.add(metrics);
 	west_panel.add(simbols);
@@ -113,8 +107,33 @@ public class gui extends JFrame{
 	west_panel.add(metric_list);
 	west_panel.add(simbol_list);
 	west_panel.add(value);
-	west_panel.add(add);
-	west_panel.add(operators);
+	
+	JPanel sub_panel = new JPanel();
+	sub_panel.setLayout(new GridLayout(2,1));
+	
+	
+	sub_panel.add(add);
+	sub_panel.add(clear);
+	west_panel.add(sub_panel);
+
+	
+	
+	JPanel sub_west_panel = new JPanel();
+	sub_west_panel.setLayout(new GridLayout(2,2));
+	
+	JButton p1 = new JButton("and");
+	JButton p2 = new JButton("or");
+	JButton p3 = new JButton("(");
+	JButton p4 = new JButton(")");
+	
+	sub_west_panel.add(p1);
+	sub_west_panel.add(p3);
+	sub_west_panel.add(p2);
+	sub_west_panel.add(p4);
+	
+	west_panel.add(sub_west_panel);
+	
+	output = new JTextArea(20,20);
 	
 	save.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -128,18 +147,72 @@ public class gui extends JFrame{
 			 JOptionPane.showMessageDialog(null, "Rule saved sucessfully");
 		}
 	});
+	
 	add.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			String created_rule = box.getText();
 			String selected_metric=getMetric();
 			String selected_simbol=getSymbol();
 			double selected_threshold=getThreshold();
-			String str = (created_rule+" " +getOperator()+" "+selected_metric + " " + selected_simbol+ " "+selected_threshold);
+			String str = (created_rule+" "+selected_metric + " " + selected_simbol+ " "+selected_threshold);
 			box.setText(str);
 			
 		}
 		
 	});
+	
+	clear.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			box.setText("");
+			
+		}
+		
+	});
+	
+	p1.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			box.setText(box.getText()+" " + "and" + " ");
+			}		
+	});
+	
+	p2.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			box.setText(box.getText()+" " + "or" + " ");
+			}		
+	});
+	
+	p3.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			box.setText(box.getText()+" " + "(" + " ");
+			}		
+	});
+	
+	p4.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			box.setText(box.getText()+" " + ")" + " ");
+			}		
+	});
+	
+	submit.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			Rule rule = new Rule(box.getText());
+			box.setText("");
+			System.out.println(rule.getRule());
+			}		
+	});
+	
+	load.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			try {
+				box.setText("");
+				load(output);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			}		
+	});
+	
 	
 	import_file.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -148,7 +221,7 @@ public class gui extends JFrame{
 	});
 	//panel center
 	
-	JTextArea output = new JTextArea(20,20);
+	
 	
 	
 	//add panels to main frame
@@ -174,10 +247,7 @@ public class gui extends JFrame{
 		double aux = Double.parseDouble(value.getText());
 		return aux;
 	}
-	public String getOperator() {
-		String op = operators.getSelectedItem().toString();
-		return op;
-	}
+	
 	public String fileChooser() {
 		String path_file=""; 
 		try {
@@ -216,6 +286,26 @@ public class gui extends JFrame{
 		
 			}
 	
+	public void load(JTextArea area) throws IOException {
+		String rules="";
+		String path_file="";
+			try {
+			     JFileChooser chooser = new JFileChooser();
+			     int retorno = chooser.showOpenDialog(null);
+			     
+			     if (retorno == JFileChooser.APPROVE_OPTION) {
+			       FileReader reader = new FileReader(chooser.getSelectedFile());
+			       path_file=  chooser.getSelectedFile().getAbsolutePath().toString();
+			       rules=new String(Files.readAllBytes(Paths.get(path_file)));
+			       JOptionPane.showMessageDialog(null, "Rules sucessfully imported");
+			         
+			     }
+			   } catch (FileNotFoundException e) {
+			     e.printStackTrace();
+			   }
+			area.setText(rules);
+		 
+	}
 	
 	
 	public static void main(String [] args) {
