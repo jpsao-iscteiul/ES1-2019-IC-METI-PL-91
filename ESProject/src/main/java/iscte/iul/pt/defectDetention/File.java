@@ -12,13 +12,18 @@ public class File {
 
 
 
-	public static int sheetIndex;
+	private static int sheetIndex;
 	private double loc_threshold = 0;
 	private double cyclo_threshold = 0;
 	private double atfd_threshold = 0;
 	private double laa_threshold = 0;
 	private int numberOfHits = 0;
 	private int numberOfMethods = 0;
+	private int numbersOfDCI = 0;
+	private int numbersOfDII = 0;
+	private int numbersOfADCI = 0;
+	private int numbersOfADII = 0;
+
 
 
 
@@ -30,15 +35,7 @@ public class File {
 		Sheet sheet = workbook.getSheetAt(sheetIndex);
 
 
-		for(Row row : sheet) {		
-
-			/* TODO : Otimizar a leitura do excel
-			for(Cell cell : row) {
-				if(cell.getCachedFormulaResultTypeEnum().STRING.equals("String")) {
-					System.out.println("okkkkkkkkkkkkkkkk");
-				}
-			}
-			 */
+		for(Row row : sheet) {	
 
 			if(row.getRowNum()>sheet.getFirstRowNum() && row.getRowNum() <= sheet.getLastRowNum()) {
 				int rowStartIndex = 2; //Porque as colunas do sheet iniciam em C
@@ -48,55 +45,59 @@ public class File {
 				String methodName = row.getCell(rowStartIndex).getStringCellValue();
 				rowStartIndex++;
 
-				double LOC =  row.getCell(rowStartIndex).getNumericCellValue();
+				double loc =  row.getCell(rowStartIndex).getNumericCellValue();
 				rowStartIndex++;
 
-				double CYCLO =  row.getCell(rowStartIndex).getNumericCellValue();
+				double cyclo =  row.getCell(rowStartIndex).getNumericCellValue();
 				rowStartIndex++;
 
-				double ATFD =  row.getCell(rowStartIndex).getNumericCellValue();
+				double atfd =  row.getCell(rowStartIndex).getNumericCellValue();
 				rowStartIndex++;
 
-				double LAA = 0; 
-
-				//				double LAA = row.getCell(rowStartIndex).getNumericCellValue(); //TODO : Tenho erro nesta Linha
+				double laa = 0; 
+				//TODO : Tenho erro nesta Linha
+				
+//				double laa = row.getCell(rowStartIndex).getNumericCellValue(); 
 				rowStartIndex++;
 
-				boolean is_long_method = row.getCell(rowStartIndex).getBooleanCellValue();
+				boolean isLongMethod = row.getCell(rowStartIndex).getBooleanCellValue();
 				rowStartIndex++;
 
 				boolean iPlasma = row.getCell(rowStartIndex).getBooleanCellValue();
 				rowStartIndex++;
 
-				boolean PMD = row.getCell(rowStartIndex).getBooleanCellValue();
+				boolean pmd = row.getCell(rowStartIndex).getBooleanCellValue();
 				rowStartIndex++;
 
 				boolean is_feature_envy = row.getCell(rowStartIndex).getBooleanCellValue();
 				rowStartIndex++;
 
-				//				System.out.println(className + "     " + methodName + "     " + LOC + "     " + CYCLO + "     "
-				//						+ ATFD + "     " + LAA + "     " + is_long_method + "     " + iPlasma + "     " + PMD + "     "
-				//						+ is_feature_envy + "\n");
+				showIsLongMethodsResults(ruleList, loc, cyclo, isLongMethod);
+				//				showIsFeatureEnvyResults(ruleList, ATFD, LAA, is_feature_envy);
 
-//				showIsLongMethodsResults(ruleList, LOC, CYCLO, is_long_method);
-				showIsFeatureEnvyResults(ruleList, ATFD, LAA, is_feature_envy);
-				
 				this.numberOfMethods ++;
+				defectDetentionQuality(pmd, iPlasma, isLongMethod);
 			}
 		}
-		
-		/*
+
+
 		System.out.println("\n");
 		System.out.println("Aplicação para avaliação daqualidade de deteção de defeitos IS LONG METHOD em projetos de software" + "\n");
 		System.out.println("Para um LOC thresold de " + this.loc_threshold + " e" + " CYCLO thresold de " + this.cyclo_threshold  + " o número de acertos para is_long_method é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos.");
-	*/
-		
+
+		/*
 		System.out.println("\n");
 		System.out.println("Aplicação para avaliação daqualidade de deteção de defeitos IS FEATURE ENVY em projetos de software" + "\n");
 		System.out.println("Para um ATFD thresold de " + this.atfd_threshold + " e" + " LAA thresold de " + this.laa_threshold  + " o número de acertos para is_feature_envy é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos.");
+		 */
+		System.out.println("Defeitos Corretamente Identificados: " + this.numbersOfDCI);
 
-	
-	
+		System.out.println("Defeitos Icorretamente Identificados: " + this.numbersOfDII);
+
+		System.out.println("Ausências Defeitos Corretamente Identificados: " + this.numbersOfADCI);
+
+		System.out.println("Ausências Defeitos Incorretamente Identificados: " + this.numbersOfADII);
+
 	}
 
 
@@ -106,21 +107,23 @@ public class File {
 
 		for(Rule rule : ruleList) {
 			if(rule.getSymbol().equals(">")) {
-				if((loc > this.loc_threshold || cyclo > this.cyclo_threshold) && isLongMethod == true) {
+				//				if((loc > this.loc_threshold || cyclo > this.cyclo_threshold) && isLongMethod == true) {
+				if((loc > this.loc_threshold && cyclo > this.cyclo_threshold)) {
 					this.numberOfHits ++;
 				}
 			}
-			
+
 			if(rule.getSymbol().equals("<")) {
-				if((loc < this.loc_threshold || cyclo < this.cyclo_threshold) && isLongMethod == true) {
+				//				if((loc < this.loc_threshold || cyclo < this.cyclo_threshold) && isLongMethod == true) {
+				if((loc < this.loc_threshold && cyclo < this.cyclo_threshold)) {
 					this.numberOfHits ++;
 				}
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	public void showIsFeatureEnvyResults(List<Rule> ruleList, double atfd, double laa, boolean isFeatureEnvy) {
 
 		for(Rule rule : ruleList) {
@@ -129,7 +132,7 @@ public class File {
 					this.numberOfHits ++;
 				}
 			}
-			
+
 			if(rule.getSymbol().equals("<")) {
 				if((atfd < this.atfd_threshold || laa < this.laa_threshold) && isFeatureEnvy == true) {
 					this.numberOfHits ++;
@@ -144,44 +147,87 @@ public class File {
 
 		boolean result = false;
 
-		for(Rule rule : ruleList) {
+		if(ruleList.size() > 0 && ruleList != null) {
+			for(Rule rule : ruleList) {
 
-			if(rule.getMetric().equals("LOC") && rule.getDefects().equals("Long Method")) {
-				this.loc_threshold = rule.getThreshold();
-				result = true;
-			}
+				if(rule.getMetric().equals("LOC") && rule.getDefects().equals("Long Method")) {
+					this.loc_threshold = rule.getThreshold();
+					result = true;
+				}
 
-			if(rule.getMetric().equals("CYCLO") && rule.getDefects().equals("Long Method")) {
-				this.cyclo_threshold = rule.getThreshold();
-				result = true;
+				if(rule.getMetric().equals("CYCLO") && rule.getDefects().equals("Long Method")) {
+					this.cyclo_threshold = rule.getThreshold();
+					result = true;
+				}
 			}
 		}
 
 		return result;
 	}
 
-
-	
 	public boolean isFeatureEnvy(List<Rule> ruleList) {
 
 		boolean result = false;
 
-		for(Rule rule : ruleList) {
+		if(ruleList.size() > 0 && ruleList != null) {
 
-			if(rule.getMetric().equals("ATFD") && rule.getDefects().equals("Feature Envy")) {
-				this.atfd_threshold = rule.getThreshold();
-				result = true;
-			}
+			for(Rule rule : ruleList) {
 
-			if(rule.getMetric().equals("LAA") && rule.getDefects().equals("Feature Envy")) {
-				this.laa_threshold = rule.getThreshold();
-				result = true;
+				if(rule.getMetric().equals("ATFD") && rule.getDefects().equals("Feature Envy")) {
+					this.atfd_threshold = rule.getThreshold();
+					result = true;
+				}
+
+				if(rule.getMetric().equals("LAA") && rule.getDefects().equals("Feature Envy")) {
+					this.laa_threshold = rule.getThreshold();
+					result = true;
+				}
 			}
 		}
+
 
 		return result;
 	}
 
+	public void defectDetentionQuality(boolean pmd, boolean iPlasma, boolean isLongMethod) {
+
+		showDCIResults(pmd, iPlasma, isLongMethod);
+		showDIIResults(pmd, iPlasma, isLongMethod);
+		showADCIResults(pmd, iPlasma, isLongMethod);
+		showADIIResults(pmd, iPlasma, isLongMethod);
+
+	}
+
+
+
+
+	public void showDCIResults(boolean pmd, boolean iPlasma, boolean isLongMethod) {
+
+		if((pmd==true || iPlasma ==true) && isLongMethod==true) {
+			this.numbersOfDCI++;
+		}
+	}
+
+	public void showDIIResults(boolean pmd, boolean iPlasma, boolean isLongMethod) {
+
+		if((pmd==true || iPlasma ==true) && isLongMethod==false) {
+			this.numbersOfDII++;
+		}
+	}
+
+	public void showADCIResults(boolean pmd, boolean iPlasma, boolean isLongMethod) {
+
+		if((pmd==false || iPlasma ==false) && isLongMethod==false) {
+			this.numbersOfADCI++;
+		}
+	}
+
+	public void showADIIResults(boolean pmd, boolean iPlasma, boolean isLongMethod) {
+
+		if((pmd==false || iPlasma ==false) && isLongMethod==true) {
+			this.numbersOfADII++;
+		}
+	}
 
 
 
@@ -278,6 +324,62 @@ public class File {
 
 	public void setLaa_threshold(double laa_threshold) {
 		this.laa_threshold = laa_threshold;
+	}
+
+
+
+
+	public int getNumbersOfDCI() {
+		return numbersOfDCI;
+	}
+
+
+
+
+	public void setNumbersOfDCI(int numbersOfDCI) {
+		this.numbersOfDCI = numbersOfDCI;
+	}
+
+
+
+
+	public int getNumbersOfDII() {
+		return numbersOfDII;
+	}
+
+
+
+
+	public void setNumbersOfDII(int numbersOfDII) {
+		this.numbersOfDII = numbersOfDII;
+	}
+
+
+
+
+	public int getNumbersOfADCI() {
+		return numbersOfADCI;
+	}
+
+
+
+
+	public void setNumbersOfADCI(int numbersOfADCI) {
+		this.numbersOfADCI = numbersOfADCI;
+	}
+
+
+
+
+	public int getNumbersOfADII() {
+		return numbersOfADII;
+	}
+
+
+
+
+	public void setNumbersOfADII(int numbersOfADII) {
+		this.numbersOfADII = numbersOfADII;
 	}
 
 

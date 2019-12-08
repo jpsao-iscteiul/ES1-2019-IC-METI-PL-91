@@ -44,6 +44,9 @@ public class gui extends JFrame{
 	private Rule rule;
 	private List<Rule> ruleList = new ArrayList<Rule>();
 	private String file_path;
+	
+	
+	
 
 	public gui() {
 		
@@ -102,9 +105,6 @@ public class gui extends JFrame{
 		simbol_list.addItem(">=");
 		simbol_list.addItem("=");
 
-
-
-
 		value = new JTextField();
 		JButton add = new JButton("Add");
 		JButton clear = new JButton("Clear");
@@ -144,7 +144,7 @@ public class gui extends JFrame{
 		west_panel.add(sub_west_panel);
 
 		output = new JTextArea(20,20);
-
+		
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String path = fileChooser();
@@ -252,8 +252,6 @@ public class gui extends JFrame{
 			}
 		});
 		//panel center
-
-
 
 
 		//add panels to main frame
