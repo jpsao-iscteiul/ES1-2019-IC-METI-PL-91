@@ -1,5 +1,6 @@
 package ES1_2019_IC_METI_PL_91.ESProject;
 
+import iscte.iul.pt.defectDetention.File;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -18,6 +19,10 @@ public class AppTest
     public AppTest( String testName )
     {
         super( testName );
+        App a = new App();
+        a.main(null);
+        File f = new File ();
+        assertTrue(true);
     }
 
     /**

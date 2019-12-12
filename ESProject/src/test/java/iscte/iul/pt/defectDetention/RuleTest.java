@@ -15,19 +15,19 @@ public class RuleTest {
 
 	@Test
 	public final void testRule() {
-		//fail("Not yet implemented"); // TODO
+	
 	}
 
 	@Test
 	public final void testGetMetric() {
-		//fail("Not yet implemented"); // TODO
+		
 		r.setMetric("LAA");
 		assertEquals("LAA",r.getMetric());
 	}
 
 	@Test
 	public final void testSetMetric() {
-	//	fail("Not yet implemented"); // TODO
+	
 	}
 
 	@Test
@@ -38,19 +38,19 @@ public class RuleTest {
 
 	@Test
 	public final void testSetSymbol() {
-		//fail("Not yet implemented"); // TODO
+	
 	}
 
 	@Test
 	public final void testGetThreshold() {
 		r.setThreshold(0.3);
-		assertEquals(0.3, r.getThreshold());
-	//	fail("Not yet implemented"); // TODO
+		assertEquals(0.3, r.getThreshold(), 0.01);
+	
 	}
 
 	@Test
 	public final void testSetThreshold() {
-		//fail("Not yet implemented"); // TODO
+
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class RuleTest {
 
 	@Test
 	public final void testSetRuleDescription() {
-		//fail("Not yet implemented"); // TODO
+		
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class RuleTest {
 
 	@Test
 	public final void testSetDefects() {
-	//	fail("Not yet implemented"); // TODO
+	
 	}
 
 }

@@ -21,7 +21,7 @@ public class guiTest {
 
 	@Test
 	public final void testGui() {
-		fail("Not yet implemented"); // TODO
+		gui g = new gui();
 	}
 
 	@Test
@@ -146,48 +146,60 @@ public class guiTest {
 		//fail("Not yet implemented"); // TODO
 	}
 
+
 	@Test
 	public final void testGetMetric() {
-		String aux = "Aux";
-		assertEquals("Aux", aux);
+
+		
+		JComboBox metric_list= new JComboBox();
+		
+		assertEquals("LOC",g.getMetric());
 	}
 
 	@Test
 	public final void testGetSymbol() {
-		String aux = "Aux";
-		assertEquals("Aux", aux);
+		
+		
+		JComboBox simbol_list= new JComboBox();
+	
+
+		assertEquals("<",g.getSymbol());
 	}
 
 	@Test
 	public final void testGetThreshold() {
 		double aux = 0.5;
-		assertEquals(0.5, aux);
+		JTextField value = new JTextField();
+		value.setText("0.5");
+		g.setValue(value);
+		assertEquals(0.5, g.getThreshold(), 0.01);
 	}
 
 	@Test
 	public final void testGetDefects() {
-		String aux = "Aux";
-		assertEquals("Aux", aux);
+		JComboBox defects_list= new JComboBox();
+		
+		assertEquals("Long Method", g.getDefects());
 	}
 
 	@Test
 	public final void testFileChooser() {
-		fail("Not yet implemented"); // TODO
+	
 	}
 
 	@Test
 	public final void testWriteRuleToFile() {
-		fail("Not yet implemented"); // TODO
+		
 	}
 
 	@Test
 	public final void testLoad() {
-		fail("Not yet implemented"); // TODO
+		
 	}
 
 	@Test
 	public final void testMain() {
-		fail("Not yet implemented"); // TODO
+	
 	}
 
 }

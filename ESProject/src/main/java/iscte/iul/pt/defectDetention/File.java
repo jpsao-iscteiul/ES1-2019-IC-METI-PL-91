@@ -26,7 +26,9 @@ public class File {
 
 
 
-
+	public File() {
+		
+	}
 	public void readExcel(String fileLocation, List<Rule> ruleList) throws IOException {
 
 		FileInputStream excelFilePath = new FileInputStream(fileLocation);
