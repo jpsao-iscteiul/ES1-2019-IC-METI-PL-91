@@ -10,3 +10,6 @@ Elementos:
 93834 Marta Almeida Coelho
 
 35326 José Pedro Azevedo
+
+Identificação e descrição de erros e funcionalidades não implementadas ou incompletas:
+(...)
