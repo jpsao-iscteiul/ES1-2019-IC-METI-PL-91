@@ -2,10 +2,14 @@ Grupo:
 ES1-2019-IC-METI-PL-91
 
 Elementos:
-Diogo Miguel Farinha
 
-André Pedro Jua
+66035 Diogo Miguel Farinha
 
-Marta Almeida Coelho
+65706 André Pedro Jua
 
-José Pedro Azevedo
+93834 Marta Almeida Coelho
+
+35326 José Pedro Azevedo
+
+Identificação e descrição de erros e funcionalidades não implementadas ou incompletas:
+(...)
