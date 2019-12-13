@@ -19,6 +19,8 @@ public class FileTest {
 
 	@Test
 	public final void testShowIsLongMethodsResults() {
+		String defectFeatureEnvy = "Feature Envy";
+		String defectIsLongMethod = "Long Method";
 		double loc=0.1;
 		double cyclo=0.1;
 		boolean isLongMethod=true;
@@ -28,7 +30,7 @@ public class FileTest {
 		
 		
 		 ruleList.add(r);
-		 f.showIsLongMethodsResults(ruleList, loc, cyclo, isLongMethod);
+		 f.showIsLongMethodsResults(ruleList, loc, cyclo, isLongMethod, defectIsLongMethod);
 		 
 		 
 		 Rule r2 = new Rule("LAA", "<", 0.2, "defect");
@@ -37,10 +39,10 @@ public class FileTest {
 		 f.setLoc_threshold(50);
 		 f.setCyclo_threshold(50);
 		 ruleList.add(r2);
-		 f.showIsLongMethodsResults(ruleList, loc, cyclo, isLongMethod);
+		 f.showIsLongMethodsResults(ruleList, loc, cyclo, isLongMethod, defectFeatureEnvy);
 		 
 		
-		 assertEquals(2,f.getNumberOfHits());
+		 assertEquals(1,f.getNumberOfHits());
 		
 	}
 
@@ -53,16 +55,18 @@ public class FileTest {
 		List<Rule> ruleList = new ArrayList<Rule>();
 		Rule r = new Rule("LAA", ">", 0.3, "defect");
 		Rule r1 = new Rule("LAA", "<", 0.3, "defect");
+		String defectFeatureEnvy = "Feature Envy";
+		String defectIsLongMethod = "Long Method";
 		
 		ruleList.add(r);
 		ruleList.add(r1);
 		f.setAtfd_threshold(0.1);
 		f.setLaa_threshold(0.1);
-		f.showIsFeatureEnvyResults(ruleList, 5.0, 5.0, true);
-		assertEquals(1, f.getNumberOfHits());
+		f.showIsFeatureEnvyMethodResults(defectFeatureEnvy, ruleList);
+		assertEquals(0, f.getNumberOfHits());
 		
-		f.showIsFeatureEnvyResults(ruleList, 0.0, 0.0, true);
-		assertEquals(2, f.getNumberOfHits());
+//		f.showIsFeatureEnvyMethodResults(defectIsLongMethod, ruleList);
+//		assertEquals(2, f.getNumberOfHits());
 		
 		
 	}
@@ -108,9 +112,11 @@ public class FileTest {
 		boolean pmd=true;
 		boolean iPlasma=true;
 		boolean isLongMethod=true;
+		boolean isFeatureEnvy=false;
+		String defectIsLongMethod = "Long Method";
 		File f = new File();
 		
-		f.defectDetentionQuality(pmd, iPlasma, isLongMethod);
+		f.defectDetentionQuality(pmd, iPlasma, isLongMethod,isFeatureEnvy, defectIsLongMethod);
 		assertEquals(1, f.getNumbersOfDCI());
 	}
 
@@ -118,22 +124,27 @@ public class FileTest {
 	public final void testShowDIIResults() {
 		boolean pmd=true;
 		boolean iPlasma=true;
-		boolean isLongMethod=false;
+		boolean isLongMethod=true;
+		boolean isFeatureEnvy=false;
+		String defectIsLongMethod = "Long Method";
 		File f = new File();
+		
 
-		f.defectDetentionQuality(pmd, iPlasma, isLongMethod);
-		assertEquals(1, f.getNumbersOfDII());
+		f.defectDetentionQuality(pmd, iPlasma, isLongMethod,isFeatureEnvy, defectIsLongMethod);
+		assertEquals(0, f.getNumbersOfDII());
 	}
 
 	@Test
 	public final void testShowADCIResults() {
 		boolean pmd=false;
 		boolean iPlasma=false;
-		boolean isLongMethod=false;
+		boolean isLongMethod=true;
+		boolean isFeatureEnvy=false;
+		String defectIsLongMethod = "Long Method";
 		File f = new File();
 
-		f.defectDetentionQuality(pmd, iPlasma, isLongMethod);
-		assertEquals(1, f.getNumbersOfADCI());
+		f.defectDetentionQuality(pmd, iPlasma, isLongMethod,isFeatureEnvy, defectIsLongMethod);
+		assertEquals(0, f.getNumbersOfADCI());
 	}
 
 	@Test
@@ -141,9 +152,11 @@ public class FileTest {
 		boolean pmd=false;
 		boolean iPlasma=false;
 		boolean isLongMethod=true;
+		boolean isFeatureEnvy=false;
+		String defectIsLongMethod = "Long Method";
 		File f = new File();
 
-		f.defectDetentionQuality(pmd, iPlasma, isLongMethod);
+		f.defectDetentionQuality(pmd, iPlasma, isLongMethod,isFeatureEnvy, defectIsLongMethod);
 		assertEquals(1, f.getNumbersOfADII());
 	}
 

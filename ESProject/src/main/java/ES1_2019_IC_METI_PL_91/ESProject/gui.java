@@ -44,6 +44,7 @@ public class gui extends JFrame{
 	private Rule rule;
 	private List<Rule> ruleList = new ArrayList<Rule>();
 	private String file_path;
+	private String defect;
 	
 	
 	
@@ -51,7 +52,7 @@ public class gui extends JFrame{
 	public gui() {
 		
 		JFrame frame = new JFrame("GUI"); 
-		frame.setSize(600, 600);
+		frame.setSize(1500, 600);
 		frame.setLayout(new BorderLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -101,9 +102,7 @@ public class gui extends JFrame{
 		//add symbols
 		simbol_list.addItem("<");
 		simbol_list.addItem(">");
-		simbol_list.addItem("<=");
-		simbol_list.addItem(">=");
-		simbol_list.addItem("=");
+
 
 		value = new JTextField();
 		JButton add = new JButton("Add");
@@ -119,7 +118,7 @@ public class gui extends JFrame{
 		west_panel.add(value);
 
 		JPanel sub_panel = new JPanel();
-		sub_panel.setLayout(new GridLayout(2,1));
+		sub_panel.setLayout(new GridLayout(1,2));
 
 
 		sub_panel.add(add);
@@ -130,16 +129,6 @@ public class gui extends JFrame{
 
 		JPanel sub_west_panel = new JPanel();
 		sub_west_panel.setLayout(new GridLayout(2,2));
-
-		JButton p1 = new JButton("and");
-		JButton p2 = new JButton("or");
-		JButton p3 = new JButton("(");
-		JButton p4 = new JButton(")");
-
-		sub_west_panel.add(p1);
-		sub_west_panel.add(p3);
-		sub_west_panel.add(p2);
-		sub_west_panel.add(p4);
 
 		west_panel.add(sub_west_panel);
 
@@ -190,30 +179,6 @@ public class gui extends JFrame{
 
 		});
 
-		p1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				box.setText(box.getText()+" " + "and" + " ");
-			}		
-		});
-
-		p2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				box.setText(box.getText()+" " + "or" + " ");
-			}		
-		});
-
-		p3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				box.setText(box.getText()+" " + "(" + " ");
-			}		
-		});
-
-		p4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				box.setText(box.getText()+" " + ")" + " ");
-			}		
-		});
-
 		submit.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
@@ -223,7 +188,8 @@ public class gui extends JFrame{
 					
 					File file = new File();
 					if(file.isLongMethod(ruleList) || file.isFeatureEnvy(ruleList)) {
-						file.readExcel(file_path, ruleList);
+						String aux = file.readExcel(file_path, ruleList, getDefects());
+						output.setText(aux);
 					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block

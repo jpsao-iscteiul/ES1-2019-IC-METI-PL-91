@@ -23,13 +23,14 @@ public class File {
 	private int numbersOfDII = 0;
 	private int numbersOfADCI = 0;
 	private int numbersOfADII = 0;
+	private String outPutResult = new String();
 
 
 
 	public File() {
-		
+
 	}
-	public void readExcel(String fileLocation, List<Rule> ruleList) throws IOException {
+	public String readExcel(String fileLocation, List<Rule> ruleList, String defString) throws IOException {
 
 		FileInputStream excelFilePath = new FileInputStream(fileLocation);
 		XSSFWorkbook workbook = new XSSFWorkbook(excelFilePath);
@@ -58,8 +59,8 @@ public class File {
 
 				double laa = 0; 
 				//TODO : Tenho erro nesta Linha
-				
-//				double laa = row.getCell(rowStartIndex).getNumericCellValue(); 
+
+				//				double laa = row.getCell(rowStartIndex).getNumericCellValue(); 
 				rowStartIndex++;
 
 				boolean isLongMethod = row.getCell(rowStartIndex).getBooleanCellValue();
@@ -71,54 +72,90 @@ public class File {
 				boolean pmd = row.getCell(rowStartIndex).getBooleanCellValue();
 				rowStartIndex++;
 
-				boolean is_feature_envy = row.getCell(rowStartIndex).getBooleanCellValue();
+				boolean isFeatureEnvy = row.getCell(rowStartIndex).getBooleanCellValue();
 				rowStartIndex++;
 
-				showIsLongMethodsResults(ruleList, loc, cyclo, isLongMethod);
-				//				showIsFeatureEnvyResults(ruleList, ATFD, LAA, is_feature_envy);
+				showIsLongMethodsResults(ruleList, loc, cyclo, isLongMethod, defString);
+				showIsFeatureEnvyResults(ruleList, atfd, laa, isFeatureEnvy, defString);
 
 				this.numberOfMethods ++;
-				defectDetentionQuality(pmd, iPlasma, isLongMethod);
+				defectDetentionQuality(pmd, iPlasma, isLongMethod, isFeatureEnvy, defString);
 			}
 		}
-
-
-		System.out.println("\n");
-		System.out.println("Aplicação para avaliação daqualidade de deteção de defeitos IS LONG METHOD em projetos de software" + "\n");
-		System.out.println("Para um LOC thresold de " + this.loc_threshold + " e" + " CYCLO thresold de " + this.cyclo_threshold  + " o número de acertos para is_long_method é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos.");
-
-		/*
-		System.out.println("\n");
-		System.out.println("Aplicação para avaliação daqualidade de deteção de defeitos IS FEATURE ENVY em projetos de software" + "\n");
-		System.out.println("Para um ATFD thresold de " + this.atfd_threshold + " e" + " LAA thresold de " + this.laa_threshold  + " o número de acertos para is_feature_envy é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos.");
-		 */
-		System.out.println("Defeitos Corretamente Identificados: " + this.numbersOfDCI);
-
-		System.out.println("Defeitos Icorretamente Identificados: " + this.numbersOfDII);
-
-		System.out.println("Ausências Defeitos Corretamente Identificados: " + this.numbersOfADCI);
-
-		System.out.println("Ausências Defeitos Incorretamente Identificados: " + this.numbersOfADII);
-
+		showIsFeatureEnvyMethodResults(defString,ruleList);
+		showIsLongMethodResults(defString,ruleList);
+		return this.outPutResult;
 	}
 
 
 
 
-	public void showIsLongMethodsResults(List<Rule> ruleList, double loc, double cyclo, boolean isLongMethod) {
+	public void showIsFeatureEnvyMethodResults(String defect, List<Rule> ruleList) {
 
-		for(Rule rule : ruleList) {
-			if(rule.getSymbol().equals(">")) {
-				//				if((loc > this.loc_threshold || cyclo > this.cyclo_threshold) && isLongMethod == true) {
-				if((loc > this.loc_threshold && cyclo > this.cyclo_threshold)) {
-					this.numberOfHits ++;
+		if(defect.equals("Feature Envy")) {
+
+			/*
+			System.out.println("\n");
+			System.out.println("Aplicação para avaliação daqualidade de deteção de defeitos IS FEATURE ENVY em projetos de software" + "\n");
+			System.out.println("Para um ATFD thresold de " + this.atfd_threshold + " e" + " LAA thresold de " + this.laa_threshold  + " o número de acertos para is_feature_envy é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos.");
+
+
+			System.out.println("Defeitos Corretamente Identificados: " + this.numbersOfDCI);
+
+			System.out.println("Defeitos Icorretamente Identificados: " + this.numbersOfDII);
+
+			System.out.println("Ausências Defeitos Corretamente Identificados: " + this.numbersOfADCI);
+
+			System.out.println("Ausências Defeitos Incorretamente Identificados: " + this.numbersOfADII);
+			 */
+
+			this.outPutResult = "Aplicação para avaliação daqualidade de deteção de defeitos IS FEATURE ENVY em projetos de software" + "\n" + "Para um ATFD thresold de " + this.atfd_threshold + " e" + " LAA thresold de " + this.laa_threshold  + " o número de acertos para is_feature_envy é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos." + "\n"
+					+ "Defeitos Corretamente Identificados: " + this.numbersOfDCI + "\n" + "Defeitos Icorretamente Identificados: " + this.numbersOfDII + "\n"
+					+ "Ausências Defeitos Corretamente Identificados: " + this.numbersOfADCI + "\n" + "Ausências Defeitos Incorretamente Identificados: " + this.numbersOfADII + "\n";			
+		}
+	}
+
+
+	public void showIsLongMethodResults(String defect, List<Rule> ruleList) {
+		if(defect.equals("Long Method")) {
+			/*
+			System.out.println("\n");
+			System.out.println("Aplicação para avaliação daqualidade de deteção de defeitos IS LONG METHOD em projetos de software" + "\n");
+			System.out.println("Para um LOC thresold de " + this.loc_threshold + " e" + " CYCLO thresold de " + this.cyclo_threshold  + " o número de acertos para is_long_method é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos.");
+
+			System.out.println("Defeitos Corretamente Identificados: " + this.numbersOfDCI);
+
+			System.out.println("Defeitos Icorretamente Identificados: " + this.numbersOfDII);
+
+			System.out.println("Ausências Defeitos Corretamente Identificados: " + this.numbersOfADCI);
+
+			System.out.println("Ausências Defeitos Incorretamente Identificados: " + this.numbersOfADII);
+			 */
+			this.outPutResult = "Aplicação para avaliação daqualidade de deteção de defeitos IS LONG METHOD em projetos de software" + "\n" + "Para um LOC thresold de " + this.loc_threshold + " e" + " CYCLO thresold de " + this.cyclo_threshold  + " o número de acertos para is_long_method é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos." + "\n"
+					+ "Defeitos Corretamente Identificados: " + this.numbersOfDCI + "\n" + "Defeitos Icorretamente Identificados: " + this.numbersOfDII + "\n"
+					+ "Ausências Defeitos Corretamente Identificados: " + this.numbersOfADCI + "\n" + "Ausências Defeitos Incorretamente Identificados: " + this.numbersOfADII + "\n";
+
+		}
+	}
+
+
+
+	public void showIsLongMethodsResults(List<Rule> ruleList, double loc, double cyclo, boolean isLongMethod, String defect) {
+
+		if(defect.equals("Long Method")) {
+			for(Rule rule : ruleList) {
+				if(rule.getSymbol().equals(">")) {
+					//				if((loc > this.loc_threshold || cyclo > this.cyclo_threshold) && isLongMethod == true) {
+					if((loc > this.loc_threshold && cyclo > this.cyclo_threshold)) {
+						this.numberOfHits ++;
+					}
 				}
-			}
 
-			if(rule.getSymbol().equals("<")) {
-				//				if((loc < this.loc_threshold || cyclo < this.cyclo_threshold) && isLongMethod == true) {
-				if((loc < this.loc_threshold && cyclo < this.cyclo_threshold)) {
-					this.numberOfHits ++;
+				if(rule.getSymbol().equals("<")) {
+					//				if((loc < this.loc_threshold || cyclo < this.cyclo_threshold) && isLongMethod == true) {
+					if((loc < this.loc_threshold && cyclo < this.cyclo_threshold)) {
+						this.numberOfHits ++;
+					}
 				}
 			}
 		}
@@ -126,18 +163,20 @@ public class File {
 
 
 
-	public void showIsFeatureEnvyResults(List<Rule> ruleList, double atfd, double laa, boolean isFeatureEnvy) {
+	public void showIsFeatureEnvyResults(List<Rule> ruleList, double atfd, double laa, boolean isFeatureEnvy, String defect) {
 
-		for(Rule rule : ruleList) {
-			if(rule.getSymbol().equals(">")) {
-				if((atfd > this.atfd_threshold || laa > this.laa_threshold) && isFeatureEnvy == true) {
-					this.numberOfHits ++;
+		if(defect.equals("Feature Envy")) {
+			for(Rule rule : ruleList) {
+				if(rule.getSymbol().equals(">")) {
+					if((atfd > this.atfd_threshold || laa > this.laa_threshold) && isFeatureEnvy == true) {
+						this.numberOfHits ++;
+					}
 				}
-			}
 
-			if(rule.getSymbol().equals("<")) {
-				if((atfd < this.atfd_threshold || laa < this.laa_threshold) && isFeatureEnvy == true) {
-					this.numberOfHits ++;
+				if(rule.getSymbol().equals("<")) {
+					if((atfd < this.atfd_threshold || laa < this.laa_threshold) && isFeatureEnvy == true) {
+						this.numberOfHits ++;
+					}
 				}
 			}
 		}
@@ -191,13 +230,20 @@ public class File {
 		return result;
 	}
 
-	public void defectDetentionQuality(boolean pmd, boolean iPlasma, boolean isLongMethod) {
+	public void defectDetentionQuality(boolean pmd, boolean iPlasma, boolean isLongMethod, boolean isFeatureEnvy, String defect) {
 
-		showDCIResults(pmd, iPlasma, isLongMethod);
-		showDIIResults(pmd, iPlasma, isLongMethod);
-		showADCIResults(pmd, iPlasma, isLongMethod);
-		showADIIResults(pmd, iPlasma, isLongMethod);
+		if(defect.equals("Long Method")) {
+			showDCIResults(pmd, iPlasma, isLongMethod);
+			showDIIResults(pmd, iPlasma, isLongMethod);
+			showADCIResults(pmd, iPlasma, isLongMethod);
+			showADIIResults(pmd, iPlasma, isLongMethod);
 
+		}else if(defect.equals("Feature Envy")) {
+			showDCIResultsFeatureEnvy(pmd, iPlasma, isFeatureEnvy);
+			showDIIResultsFeatureEnvy(pmd, iPlasma, isFeatureEnvy);
+			showADCIResultsFeatureEnvy(pmd, iPlasma, isFeatureEnvy);
+			showADIIResultsFeatureEnvy(pmd, iPlasma, isFeatureEnvy);
+		}
 	}
 
 
@@ -210,9 +256,28 @@ public class File {
 		}
 	}
 
+
+	public void showDCIResultsFeatureEnvy(boolean pmd, boolean iPlasma, boolean isFeatureEnvy) {
+
+		if((pmd==true || iPlasma ==true) && isFeatureEnvy==true) {
+			this.numbersOfDCI++;
+		}
+	}
+
+
+
+
 	public void showDIIResults(boolean pmd, boolean iPlasma, boolean isLongMethod) {
 
 		if((pmd==true || iPlasma ==true) && isLongMethod==false) {
+			this.numbersOfDII++;
+		}
+	}
+
+
+	public void showDIIResultsFeatureEnvy(boolean pmd, boolean iPlasma, boolean isFeatureEnvy) {
+
+		if((pmd==true || iPlasma ==true) && isFeatureEnvy==false) {
 			this.numbersOfDII++;
 		}
 	}
@@ -224,9 +289,23 @@ public class File {
 		}
 	}
 
+	public void showADCIResultsFeatureEnvy(boolean pmd, boolean iPlasma, boolean isFeatureEnvy) {
+
+		if((pmd==false || iPlasma ==false) && isFeatureEnvy==false) {
+			this.numbersOfADCI++;
+		}
+	}
+
 	public void showADIIResults(boolean pmd, boolean iPlasma, boolean isLongMethod) {
 
 		if((pmd==false || iPlasma ==false) && isLongMethod==true) {
+			this.numbersOfADII++;
+		}
+	}
+
+	public void showADIIResultsFeatureEnvy(boolean pmd, boolean iPlasma, boolean isFeatureEnvy) {
+
+		if((pmd==false || iPlasma ==false) && isFeatureEnvy==true) {
 			this.numbersOfADII++;
 		}
 	}
