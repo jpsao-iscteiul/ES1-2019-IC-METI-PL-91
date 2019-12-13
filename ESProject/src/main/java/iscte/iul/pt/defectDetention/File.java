@@ -30,22 +30,20 @@ public class File {
 	public File() {
 
 	}
+	
+	
+	
 	public String readExcel(String fileLocation, List<Rule> ruleList, String defString) throws IOException {
 
 		FileInputStream excelFilePath = new FileInputStream(fileLocation);
 		XSSFWorkbook workbook = new XSSFWorkbook(excelFilePath);
-
 		Sheet sheet = workbook.getSheetAt(sheetIndex);
-
-
 		for(Row row : sheet) {	
 
 			if(row.getRowNum()>sheet.getFirstRowNum() && row.getRowNum() <= sheet.getLastRowNum()) {
 				int rowStartIndex = 2; //Porque as colunas do sheet iniciam em C
-				String className = row.getCell(rowStartIndex).getStringCellValue();
 				rowStartIndex++;
 
-				String methodName = row.getCell(rowStartIndex).getStringCellValue();
 				rowStartIndex++;
 
 				double loc =  row.getCell(rowStartIndex).getNumericCellValue();
@@ -94,21 +92,6 @@ public class File {
 
 		if(defect.equals("Feature Envy")) {
 
-			/*
-			System.out.println("\n");
-			System.out.println("Aplicação para avaliação daqualidade de deteção de defeitos IS FEATURE ENVY em projetos de software" + "\n");
-			System.out.println("Para um ATFD thresold de " + this.atfd_threshold + " e" + " LAA thresold de " + this.laa_threshold  + " o número de acertos para is_feature_envy é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos.");
-
-
-			System.out.println("Defeitos Corretamente Identificados: " + this.numbersOfDCI);
-
-			System.out.println("Defeitos Icorretamente Identificados: " + this.numbersOfDII);
-
-			System.out.println("Ausências Defeitos Corretamente Identificados: " + this.numbersOfADCI);
-
-			System.out.println("Ausências Defeitos Incorretamente Identificados: " + this.numbersOfADII);
-			 */
-
 			this.outPutResult = "Aplicação para avaliação daqualidade de deteção de defeitos IS FEATURE ENVY em projetos de software" + "\n" + "Para um ATFD thresold de " + this.atfd_threshold + " e" + " LAA thresold de " + this.laa_threshold  + " o número de acertos para is_feature_envy é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos." + "\n"
 					+ "Defeitos Corretamente Identificados: " + this.numbersOfDCI + "\n" + "Defeitos Icorretamente Identificados: " + this.numbersOfDII + "\n"
 					+ "Ausências Defeitos Corretamente Identificados: " + this.numbersOfADCI + "\n" + "Ausências Defeitos Incorretamente Identificados: " + this.numbersOfADII + "\n";			
@@ -118,19 +101,6 @@ public class File {
 
 	public void showIsLongMethodResults(String defect, List<Rule> ruleList) {
 		if(defect.equals("Long Method")) {
-			/*
-			System.out.println("\n");
-			System.out.println("Aplicação para avaliação daqualidade de deteção de defeitos IS LONG METHOD em projetos de software" + "\n");
-			System.out.println("Para um LOC thresold de " + this.loc_threshold + " e" + " CYCLO thresold de " + this.cyclo_threshold  + " o número de acertos para is_long_method é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos.");
-
-			System.out.println("Defeitos Corretamente Identificados: " + this.numbersOfDCI);
-
-			System.out.println("Defeitos Icorretamente Identificados: " + this.numbersOfDII);
-
-			System.out.println("Ausências Defeitos Corretamente Identificados: " + this.numbersOfADCI);
-
-			System.out.println("Ausências Defeitos Incorretamente Identificados: " + this.numbersOfADII);
-			 */
 			this.outPutResult = "Aplicação para avaliação daqualidade de deteção de defeitos IS LONG METHOD em projetos de software" + "\n" + "Para um LOC thresold de " + this.loc_threshold + " e" + " CYCLO thresold de " + this.cyclo_threshold  + " o número de acertos para is_long_method é de " + this.numberOfHits/2 + " num total de " + this.numberOfMethods  + " Métodos." + "\n"
 					+ "Defeitos Corretamente Identificados: " + this.numbersOfDCI + "\n" + "Defeitos Icorretamente Identificados: " + this.numbersOfDII + "\n"
 					+ "Ausências Defeitos Corretamente Identificados: " + this.numbersOfADCI + "\n" + "Ausências Defeitos Incorretamente Identificados: " + this.numbersOfADII + "\n";
@@ -145,14 +115,12 @@ public class File {
 		if(defect.equals("Long Method")) {
 			for(Rule rule : ruleList) {
 				if(rule.getSymbol().equals(">")) {
-					//				if((loc > this.loc_threshold || cyclo > this.cyclo_threshold) && isLongMethod == true) {
 					if((loc > this.loc_threshold && cyclo > this.cyclo_threshold)) {
 						this.numberOfHits ++;
 					}
 				}
 
 				if(rule.getSymbol().equals("<")) {
-					//				if((loc < this.loc_threshold || cyclo < this.cyclo_threshold) && isLongMethod == true) {
 					if((loc < this.loc_threshold && cyclo < this.cyclo_threshold)) {
 						this.numberOfHits ++;
 					}
@@ -462,14 +430,4 @@ public class File {
 	public void setNumbersOfADII(int numbersOfADII) {
 		this.numbersOfADII = numbersOfADII;
 	}
-
-
-
-
-
-
-
-
-
-
 }
